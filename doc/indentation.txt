@@ -1,0 +1,84 @@
+for indentation of a line of janet code (in any editor):
+
+1. create a suitable region to send to an external "formatter" - two pieces
+   involved:
+    * 1.a. find the beginning of the containing top-level form (possibly via
+      cached info) - this is the start of the region
+    * 1.b. the end of the line-to-be-indented is the end of the region
+
+2. send the region to an external formatter, which:
+    * 2.a. replaces the last line of input with some symbol string along with
+      any missing delimiters for the entire region.  see below for reasoning.
+    * 2.b. uses spork/fmt to format a region consisting of:
+        * 2.b.i. all but the last line
+        * 2.b.ii. last line "updated" by procedure in 2.a.
+    * 2.c. analzyes the result of formatting to determine how many spaces
+      are needed for indentation of the last line.
+    * 2.d. sends the number back to the editor
+    * X. the previous description assumes a happy path scenario - may need
+      to consider if there are error conditions.
+
+3. if necessary, the editor adjusts the indentation for the target line
+   using the number it received from the external formatter.
+
+some consequences:
+
+1. editors that implement this scheme can be consistent with each other
+   with respect to indentation.
+
+2. only leading whitespace for a line (i.e. indentation) changes in the
+   buffer.  though it is possible that the indentation is already correct
+   so no adjustment may occur.
+
+3. indentation leads to a process running (likely the corresponding program
+   is written in janet though so may be it's not so bad?)
+
+4. this method may be adaptable to the "only format a limited region" idea
+   figuring out a practical way to do 1.a. appears to be key
+
+explanation of step 2.a.
+
+the last line of the region to format can be and is replaced because:
+
+* indentation only depends on what comes on previous lines
+
+* if the last line only has closing delimiters on it, spork/fmt will put
+  these on the previous line.  this leads to an invalid computation
+  of indentation.  thus a token symbol string (some people have called this
+  a "door stop" in the context of preventing parinfer from messing with
+  editing) is put on the last line before the closing delimiters to prevent
+  the closing delimiters from ending up on the previous line.
+
+---
+
+on a side note, not sure yet, but seems possible that if one writes their
+janet source in a way such that:
+
+1. in multi-line strings, one never uses the left-most column, and
+
+2. all top-level forms begin with a character in the left-most column
+
+there may be a cheap way to find the opening delimiter of the desired
+top-level form (possibly a linter could warn...).
+
+it is: the straight-forward way of just scanning the first character
+(left-most column character) starting at one line above the
+line-to-be-indented until one finds the beginning of the "containing"
+top-level form.
+
+note the "left margin convention"
+
+* https://www.gnu.org/software/emacs/manual/html_node/emacs/Left-Margin-Paren.html
+* https://emacs.stackexchange.com/questions/29259/emacs-lisp-mode-indentation-problem-when-doc-string-contains-left-parenthesis-in
+* https://github.com/emacs-mirror/emacs/blob/emacs-27.1/etc/NEWS#L2893-L2901
+
+---
+
+extra bits:
+
+* lsp has a formatting api
+
+* wasm useful at all -- perhaps not -- keeping the "external formatter" as
+  a janet script may be a good idea.  if one is editing janet source,
+  there is a good chance janet is installed in that environment.
+

@@ -1,0 +1,32 @@
+* example janet parser state:
+
+  # example parser/state based on `{:a 1`
+  @{:delimiters "{"
+    :frames @[@{:args @[]
+                :column 0
+                :line 1
+                :type :root}
+              @{:args @[:a 1]
+                :column 1
+                :line 1
+                :type :struct}]}
+
+* the state includes:
+  * stack (single string) of opening delimiters
+  * stack (array) of frames (tables) of info:
+    * args <- what is this?
+    * column
+    * row
+    * type
+      * :root
+      * :struct
+      * :table
+      * :tuple
+      * :array
+      * :string
+      * :buffer
+      * :comment
+      * :token
+
+* can use the parser to determine if current position in buffer
+  is in a string or comment or otherwise
