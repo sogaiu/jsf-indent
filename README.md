@@ -4,24 +4,15 @@ Indentation Based on Janet's spork/fmt
 
 ## Background
 
-It's not unusual for the terms "indentation" and "formatting" to be
-used somewhat interchangeably.  However, below they will be treated as
-separate but related ideas.
-
-Formatting tends to be applied to a file or per top-level form.
-Indentation tends to be a per-line operation.
-
-When indentation occurs, the changes are local and few.  Compared to
-formatting an entire file or buffer, "taking in" the changes is spread
-out over time.  Formatting an entire file or buffer tends to present a
-situation where either one does not review all of the changes or one
-is faced with the task of going through changes across the target
-range all at once.
+It's not unusual for the terms
+["indentation" and "formatting"](doc/indentation-and-formatting.md)
+to be used somewhat interchangeably.  However, below they will be treated
+as separate but related ideas.
 
 ## Why
 
 * Usually want to indent consistently with spork/fmt
-* [Sometimes want to deviate from spork/fmt](https://github.com/janet-lang/jpm/blob/6b2173e3606dc649f8ac63cf950d2a1b49fe573d/jpm/shutil.janet#L34-L37)
+* Sometimes want to [deviate from spork/fmt](https://github.com/janet-lang/jpm/blob/6b2173e3606dc649f8ac63cf950d2a1b49fe573d/jpm/shutil.janet#L34-L37)
 * Do not want to batch review "formatting" changes to code
 * Do not want "formatting" changes to occur "behind one's back"
 
