@@ -18,78 +18,16 @@ as separate but related ideas.
 
 ## Editor Support
 
-At the moment, there is only integration with Emacs.  Most of the
-"heavy lifting" is done via an external program written in Janet,
-simplifying the editor side of things.
+At the moment, there is only [integration with Emacs](doc/emacs.md).
 
 The author hopes that it will be practical to support other editors
 such as Neovim, Kakoune, Freja, and possibly VSCode.
 
-### Emacs
-
-How to set things up varies a bit depending on how one manages one's
-Emacs, e.g. straight.el, Doom, etc.  What's common to all situations
-is likely:
-
-* Ensure a janet-mode is installed and configured.
-
-* Clone this repository.
-
-#### straight.el
-
-* I add the following sort of thing to my `.emacs`-equivalent:
-    ```
-    (straight-use-package
-      '(jsf-indent :host github
-                   :repo "sogaiu/jsf-indent"
-                   :files ("*.el" "jsf-indent")))
-
-    (use-package jsf-indent
-      :straight t
-      :config
-      (add-hook 'janet-mode-hook
-                (lambda ()
-                  (setq-local indent-line-function
-                              #'jsf-indent-line))))
-    ```
-
-#### Doom
-
-* Allegedly, the following is valid for Doom:
-    ```
-    (package! jsf-indent
-      :recipe (:type git
-               :host github
-               :repo "sogaiu/jsf-indent"
-               :files (:defaults ("jsf-indent/" "jsf-indent/*"))))
-
-    (use-package! jsf-indent
-      :config
-      (add-hook 'janet-mode-hook
-                (lambda ()
-                  (setq-local indent-line-function
-                              #'jsf-indent-line))))
-    ```
-
-#### Vanilla
-
-* If you cloned to `~/src/jsf-indent`, add the following to your
-  `.emacs`-equivalent:
-    ```
-    (add-to-list 'load-path
-                 (expand-file-name "~/src/jsf-indent"))
-
-    (add-hook 'janet-mode-hook
-              (lambda ()
-                (require 'jsf-indent)
-                (setq-local indent-line-function
-                            #'jsf-indent-line)))
-    ```
-
-#### package.el
-
-* Sorry, no support for that.  The Vanilla instructions should work
-  though.
+Most of the "heavy lifting" is done via an external program written in
+Janet, simplifying the editor side of things.  Note that because an
+external program is involved, things are more likely to work if
+this repository is cloned in full, as compared with just copying a
+single file (e.g. just `jsf-indent.el`).
 
 ## Features
 
