@@ -41,6 +41,10 @@
   nil
   "If non-nil, output debug info to *Messages* buffer.")
 
+(defvar jsf-indent--temp-buffers
+  '()
+  "List of buffers to clean up before executing `jsf-indent--helper'.")
+
 (defun jsf-indent-line ()
   "Indent current line as Janet code."
   (interactive)
@@ -66,12 +70,13 @@
 A region bounded by START and END is sent to a helper program."
   (interactive "r")
   (condition-case err
-      (let ((temp-buffer (generate-new-buffer
-                          (concat (if jsf-indent--debug-output
-                                      ""
-                                    " ")
-                                  "*jsf-indent*")))
+      (let ((temp-buffer (generate-new-buffer "*jsf-indent*"))
             (result nil))
+        ;; clean up any old buffers
+        ;; XXX: assumes all previous calls have completed before this call
+        (dolist (old-buffer jsf-indent--temp-buffers)
+          (kill-buffer old-buffer))
+        (add-to-list 'jsf-indent--temp-buffers temp-buffer)
         (save-excursion
           (when jsf-indent--debug-output
             (message "region: %S"
