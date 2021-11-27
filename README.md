@@ -2,6 +2,10 @@
 
 Indentation Based on Janet's spork/fmt
 
+## Status
+
+Work is now taking place on [janet-editor-elf](https://github.com/sogaiu/janet-editor-elf), a conceptual descendant of jsf-indent with wider scope.
+
 ## Background
 
 It's not unusual for the terms
